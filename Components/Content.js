@@ -1,6 +1,7 @@
-import React,{ useState } from 'react';
+import React,{ useState, useEffect } from 'react';
 import { StyleSheet, Text, Pressable, Image, ScrollView, View, TextInput, } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
+import {Picker} from '@react-native-picker/picker';
 
 const countries = [
     {title: 'USA', image: require('../images/USA.png'), currency:'USD'},
@@ -12,14 +13,76 @@ const Content = () => {
     
 const [tarifas, setTarifas ] = useState(false);
 const [value, setValue ] = useState({})
-const [y, setY ] = useState({})
+const [value2, setValue2 ] = useState({})
 const [importeEnviar, setImporteEnviar ] = useState()
+const [ tipo, setTipo] = useState ('')
 
-const cotizacion = () =>{
-    if( value.title === 'MEX'){
-        
+const [ conversion, setConversion ] = useState('')
+const [ tipoCambio, seTipoCambio ] = useState('')
+const [ tarifa, setTarifa ] = useState('')
+const [ total, setTotal ] = useState('')
+
+useEffect(() => {
+    if( value.title === 'MEX' && value2.title === 'USA'){
+        const cotizacion = ( importeEnviar *.05 )
+        seTipoCambio('0.5')
+        setConversion(cotizacion)
+
+    } else if ( value.title === 'MEX' && value2.title === 'R. DOM' ){
+        const cotizacion = ( importeEnviar * 2.77 )
+        seTipoCambio('2.77')
+        setConversion(cotizacion)
+
+    } else if ( value.title === 'USA' && value2.title === 'R. DOM' ){
+        const cotizacion = ( importeEnviar * 55.3 )
+        seTipoCambio('55.3')
+        setConversion(cotizacion)
+
+    }else if ( value.title === 'USA' && value2.title === 'MEX' ){
+        const cotizacion = ( importeEnviar / .05 )
+        seTipoCambio('20')
+        setConversion(cotizacion)
+
+    }else if ( value.title === 'R. DOM' && value2.title === 'MEX' ){
+        const cotizacion = ( importeEnviar * 0.36 )
+        seTipoCambio('0.36')
+        setConversion(cotizacion)
+
+    }else if ( value.title === 'R. DOM' && value2.title === 'USA' ){
+        const cotizacion = ( importeEnviar * 0.018 )
+        seTipoCambio('0.018')
+        setConversion(cotizacion)
+
+    }else if ( value.title === 'USA' && value2.title === 'USA' ){
+        const cotizacion = ( importeEnviar )
+        seTipoCambio('1')
+        setConversion(cotizacion)
+
+    }else if ( value.title === 'MEX' && value2.title === 'MEX' ){
+        const cotizacion = ( importeEnviar )
+        seTipoCambio('1')
+        setConversion(cotizacion)
+
+    }else if ( value.title === 'R. DOM' && value2.title === 'R. DOM' ){
+        const cotizacion = ( importeEnviar )
+        seTipoCambio('1')
+        setConversion(cotizacion)
+
+    }else{
+        const cotizacion = ( '5700.00' )
+        seTipoCambio('1')
+        setConversion(cotizacion)
+
     }
-}
+
+    const porcentaje = (conversion*0.0025 )
+    setTarifa(porcentaje)
+
+    setTotal(importeEnviar+porcentaje)
+
+    
+
+},[importeEnviar, value, value2 ])
 
   return (
       <View>
@@ -79,9 +142,7 @@ const cotizacion = () =>{
                     );
                     }}
                 />
-                <View>
 
-                </View>
                 <TextInput 
                     placeholder='100.00'
                     style={styles.input}
@@ -101,29 +162,29 @@ const cotizacion = () =>{
                         }}
                         onSelect={(selectedItem, index) => {
                             {selectedItem ?
-                                setY(selectedItem):
+                                setValue2(selectedItem):
                             <></>
                         }
                         }}
                         buttonStyle={styles.dropdownBtnStyle2}
                             renderCustomizedButtonChild={(selectedItem, index) => {
                                 return (
-                                        <View style={styles.dropdownBtn}>
-                                            <Text style={styles.sending}> Enviando a:  </Text>
-                                            {selectedItem ? (
-                                            <>
-                                                <Image source={selectedItem.image} style={styles.dropdownBtnImage} /> 
-                                                <Text style={styles.dropdownBtnTxt}> { selectedItem.title }</Text> 
+                                    <View style={styles.dropdownBtn}>
+                                        <Text style={styles.sending}> Enviando a:  </Text>
+                                        {selectedItem ? (
+                                        <>
+                                            <Image source={selectedItem.image} style={styles.dropdownBtnImage} /> 
+                                            <Text style={styles.dropdownBtnTxt}> { selectedItem.title }</Text> 
                                                 
-                                            </>
-                                            ) : (
-                                                <>
-                                                    <Image source={require('../images/world.png')} style={styles.dropdownBtnImage2} />
-                                                    <Text style={styles.dropdownBtnTxt}> Pais </Text> 
-                                                </>
-                                            )}
-                                            <Image source={require('../images/dropDownIcon.png')} style={styles.dropdownBtnIcon} />
-                                        </View>
+                                        </>
+                                        ) : (
+                                          <>
+                                            <Image source={require('../images/world.png')} style={styles.dropdownBtnImage2} />
+                                             <Text style={styles.dropdownBtnTxt}> Pais </Text> 
+                                          </>
+                                        )}
+                                        <Image source={require('../images/dropDownIcon.png')} style={styles.dropdownBtnIcon} />
+                                    </View>
                                 );
                             }}
 
@@ -143,9 +204,23 @@ const cotizacion = () =>{
                         style={styles.input}
 
                     /> */}
-                    <Text style={[styles.input, styles.input2]}> 5,700.00</Text>
+                    <View>
+                        {conversion ?<Text style={[styles.input, styles.input2]}> {conversion}</Text>
+                        :<Text style={[styles.input, styles.input2]}> 5700.00</Text>}
+                        <Picker 
+                            style={styles.picker}
+                            selectedValue= {tipo}
+                            onValueChange= {(itemValue)=>{setTipo (itemValue)}}
+                        >
+                            <Picker.Item label='--Seleccionar--' value=""/>
+                            <Picker.Item label="USD" value="USD"/>
+                            <Picker.Item label="MXN" value="MXN"/>
+                            <Picker.Item label="DOP" value="DOP"/>
+                        </Picker>
+                    </View>
 
-                    <Text style={styles.currency}> {y.currency}</Text>
+
+
             </View>
             <View>
                 <Pressable
@@ -159,14 +234,28 @@ const cotizacion = () =>{
             </View>
             {tarifas ? 
                 <View style={styles.contTarifas}>
-                    <Text style={styles.tipoCambio}> Tipo de cambio: 1 {value.currency} = 50 {y.currency}</Text>
+                    <Text style={styles.tipoCambio}> Tipo de cambio: 1 {value.currency} = {tipoCambio}{''}{value2.currency}</Text>
 
-
-                    <Text style={styles.tarifasTxt}> Pagando en <Text style={styles.tarifasData}> {value.currency} </Text> </Text>
-                    <Text style={styles.tarifasTxt}> Importe a enviar <Text style={styles.tarifasData}> {importeEnviar}{value.currency} </Text></Text>
-                    <Text style={styles.tarifasTxt}> Tarifa <Text style={styles.tarifasData}> {value.currency} </Text></Text>
-                    <Text style={styles.tarifasTxt}> Total <Text style={styles.tarifasData}> {value.currency} </Text></Text>
-                    <Text style={styles.tarifasTxt}> Importe a recibir <Text style={styles.tarifasData}> {y.currency} </Text></Text>
+                    <View style={styles.cont1}>
+                        <Text style={styles.tarifasTxt}> Pagando en </Text>
+                        <Text style={styles.tarifasData}> {value.currency} </Text>
+                    </View>
+                    <View style={styles.cont1}>
+                        <Text style={styles.tarifasTxt}> Importe a enviar </Text>
+                        <Text style={styles.tarifasData}> {importeEnviar}{' '}{value.currency} </Text>
+                    </View>
+                    <View style={styles.cont1}>
+                        <Text style={styles.tarifasTxt}> Tarifa </Text>
+                        <Text style={styles.tarifasData}> {tarifa}{' '}{value.currency} </Text>
+                    </View>
+                    <View style={styles.cont1}>
+                        <Text style={styles.tarifasTxt}> Total </Text>
+                        <Text style={styles.tarifasData}> {total} {value.currency} </Text>
+                    </View>
+                    <View style={styles.cont1}>
+                        <Text style={styles.tarifasTxt}> Importe a recibir </Text>
+                        <Text style={styles.tarifasData}>{conversion} {value2.currency} </Text>
+                    </View>
                 </View>:
                 <></>
             }
@@ -197,6 +286,15 @@ const styles = StyleSheet.create({
         marginTop:40,
         marginBottom:25
     },
+    cont1:{
+        display:'flex',
+        flexDirection:'row',
+        justifyContent:'space-between',
+        borderBottomWidth:.5,
+        borderColor:'#d6d6d6',
+        marginLeft:25,
+        marginBottom:10
+    },
     currency:{
         position:'absolute',
         right:13,
@@ -204,6 +302,18 @@ const styles = StyleSheet.create({
         fontWeight:'600',
         color:'#7d7d7d'
     },
+    picker:{
+        // marginHorizontal:20,
+        backgroundColor:'#ebebeb',
+        borderRadius:10,
+        // paddingLeft:15,
+        color: '#404040',
+        width:40,
+        height:1,
+        position:'absolute',
+        right:5,
+        top:3
+      },
     contTarifas:{
         marginTop:20,
         alignSelf:'baseline',
@@ -224,11 +334,9 @@ const styles = StyleSheet.create({
     tarifasTxt:{
         fontWeight:'bold',
         fontSize:14, 
-        marginLeft:25,
+        // marginLeft:25,
         paddingBottom:8,
-        marginBottom:5,
-        borderBottomWidth:.5,
-        borderColor:'#d6d6d6'
+        // marginBottom:5,
     },
     input:{
         height:60,

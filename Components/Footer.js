@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
         marginHorizontal:30,
         padding:2,
         borderRadius:35,
+        marginBottom:30
     },
     textBtn:{
         fontWeight:'600',
