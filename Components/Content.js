@@ -14,75 +14,144 @@ const Content = () => {
 const [tarifas, setTarifas ] = useState(false);
 const [value, setValue ] = useState({})
 const [value2, setValue2 ] = useState({})
-const [importeEnviar, setImporteEnviar ] = useState()
+const [importeEnviar, setImporteEnviar ] = useState(0)
 const [ tipo, setTipo] = useState ('')
 
-const [ conversion, setConversion ] = useState('')
-const [ tipoCambio, seTipoCambio ] = useState('')
-const [ tarifa, setTarifa ] = useState('')
-const [ total, setTotal ] = useState('')
+const [ conversion, setConversion ] = useState(0)
+const [ tipoCambio, seTipoCambio ] = useState(0)
+const [ tarifa, setTarifa ] = useState(0)
+const [ total, setTotal ] = useState(0)
 
 useEffect(() => {
     if( value.title === 'MEX' && value2.title === 'USA'){
         const cotizacion = ( importeEnviar *.05 )
-        seTipoCambio('0.5')
+        seTipoCambio(Number(0.5))
         setConversion(cotizacion)
+
+        const porcentaje = conversion * 0.05 
+        setTarifa(porcentaje)
+        const suma = (parseFloat(importeEnviar) + parseFloat(porcentaje))
+
+        setTotal(suma)
+    
+        console.log(total)
+    
 
     } else if ( value.title === 'MEX' && value2.title === 'R. DOM' ){
         const cotizacion = ( importeEnviar * 2.77 )
-        seTipoCambio('2.77')
+        seTipoCambio(2.77)
         setConversion(cotizacion)
+
+        const porcentaje = conversion * 0.05 
+        setTarifa(porcentaje)
+        const suma = (parseFloat(importeEnviar) + parseFloat(porcentaje))
+
+        setTotal(suma)
+        console.log(tarifa)
+    
 
     } else if ( value.title === 'USA' && value2.title === 'R. DOM' ){
         const cotizacion = ( importeEnviar * 55.3 )
-        seTipoCambio('55.3')
+        seTipoCambio(55.3)
         setConversion(cotizacion)
+
+        const porcentaje = conversion * 0.05 
+        setTarifa(porcentaje)
+        const suma = (parseFloat(importeEnviar) + parseFloat(porcentaje))
+
+        setTotal(suma)
+        console.log(tarifa)
+    
 
     }else if ( value.title === 'USA' && value2.title === 'MEX' ){
         const cotizacion = ( importeEnviar / .05 )
-        seTipoCambio('20')
+        seTipoCambio(20)
         setConversion(cotizacion)
+
+        const porcentaje = conversion * 0.05 
+        setTarifa(porcentaje)
+        const suma = (parseFloat(importeEnviar) + parseFloat(porcentaje))
+
+        setTotal(suma)
+        console.log(tarifa)
+    
 
     }else if ( value.title === 'R. DOM' && value2.title === 'MEX' ){
         const cotizacion = ( importeEnviar * 0.36 )
-        seTipoCambio('0.36')
+        seTipoCambio(0.36)
         setConversion(cotizacion)
+
+        const porcentaje = conversion * 0.05 
+        setTarifa(porcentaje)
+        const suma = (parseFloat(importeEnviar) + parseFloat(porcentaje))
+
+        setTotal(suma)
+        console.log(tarifa)
+    
 
     }else if ( value.title === 'R. DOM' && value2.title === 'USA' ){
         const cotizacion = ( importeEnviar * 0.018 )
-        seTipoCambio('0.018')
+        seTipoCambio(0.018)
         setConversion(cotizacion)
+
+        const porcentaje = conversion * 0.05 
+        setTarifa(porcentaje)
+        const suma = (parseFloat(importeEnviar) + parseFloat(porcentaje))
+
+        setTotal(suma)
+    
+        console.log(tarifa)
+    
 
     }else if ( value.title === 'USA' && value2.title === 'USA' ){
         const cotizacion = ( importeEnviar )
-        seTipoCambio('1')
+        seTipoCambio(1)
         setConversion(cotizacion)
+
+        const porcentaje = conversion * 0.05 
+        setTarifa(porcentaje)
+
+        const suma = (parseFloat(importeEnviar) + parseFloat(porcentaje))
+
+        setTotal(suma)
+        // setTotal(Number(importeEnviar+porcentaje))
+    
+        console.log(total)
+    
 
     }else if ( value.title === 'MEX' && value2.title === 'MEX' ){
         const cotizacion = ( importeEnviar )
-        seTipoCambio('1')
+        seTipoCambio(1)
         setConversion(cotizacion)
+
+        const porcentaje = conversion * 0.05 
+        setTarifa(porcentaje)
+        setTotal(importeEnviar+porcentaje)
+    
+        console.log(tarifa)
+    
 
     }else if ( value.title === 'R. DOM' && value2.title === 'R. DOM' ){
         const cotizacion = ( importeEnviar )
-        seTipoCambio('1')
+        seTipoCambio(1)
         setConversion(cotizacion)
 
+        const porcentaje = conversion * 0.05 
+        setTarifa(porcentaje)
+        setTotal(importeEnviar+porcentaje)
+    
+        console.log(tarifa)
+    
+
     }else{
-        const cotizacion = ( '5700.00' )
-        seTipoCambio('1')
+        const cotizacion = ( 5700.00 )
+        seTipoCambio(1)
         setConversion(cotizacion)
 
     }
+  
 
-    const porcentaje = (conversion*0.0025 )
-    setTarifa(porcentaje)
-
-    setTotal(importeEnviar+porcentaje)
-
-    
-
-},[importeEnviar, value, value2 ])
+},[importeEnviar, value, value2, total ])
 
   return (
       <View>
@@ -96,7 +165,7 @@ useEffect(() => {
                         image: require('../images/USA.png'),
                     }}
                     onSelect={(selectedItem, index) => {
-                        console.log(selectedItem, index);
+                        // console.log(selectedItem, index);
                         {selectedItem ?
                                 setValue(selectedItem):
                             <></>
@@ -104,7 +173,7 @@ useEffect(() => {
                     }}
                     buttonStyle={styles.dropdownBtnStyle}
                         renderCustomizedButtonChild={(selectedItem, index) => {
-                            console.log(selectedItem)
+                            // console.log(selectedItem)
 
                             return (
                                     <View style={styles.dropdownBtn}>
